@@ -1,0 +1,52 @@
+---
+title: "Penguins Size Comparisons"
+author: "Alex Gaynor"
+date: "11/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+library(effsize)
+library(broom)
+library(ggbeeswarm)
+library(car)
+
+```
+
+#Part 1. T-tests
+
+Mass comparison between male and female penguins.
+
+```{r}
+chinstrap <- penguins %>% 
+  filter(species == "Chinstrap")
+
+# histograms - we don't give a y variable. The histogram counts the things in the bins to populate the y axis.
+ggplot(data = chinstrap, aes(x = body_mass_g)) +
+  geom_histogram(bins = 10) +
+  facet_wrap(~sex)
+
+# qq plot - the closer to linear, the closer the sample is to being drwn from a normal distribution
+ggplot(data = chinstrap, aes(sample = body_mass_g)) +
+  geom_qq() +
+  facet_wrap(~sex)
+
+# Get group descriptive statistics
+chinstrap %>%
+  group_by(sex) %>% 
+  summarize(
+    mean_mass = mean(body_mass_g),
+    median_mass = median(body_mass_g),
+    sd_mass = sd(body_mass_g),
+    sample_size = n()
+  )
+```
+
+### These qq distribution are about as close to linear as real world data gets.
+
+
+
+
